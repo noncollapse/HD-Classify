@@ -1,0 +1,22 @@
+---
+title: "Sample Training and Test Data"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Selecting Training and Testing Data
+Randomly 20% sample the full data (without replacement) to create a testing dataset which will be set aside. The remaining 80% will constitute the training data.
+```{r}
+set.seed(123456)
+data <- read.csv("Data/detailed.cleveland.data.csv")
+test_train_split <- sample(c(FALSE,TRUE), nrow(data), replace=TRUE, prob = c(0.2, 0.8))
+test_data <- data[!test_train_split,]
+train_data <- data[test_train_split,]
+write.csv(test_data, "Data/Cleveland.data.test.csv", row.names=FALSE)
+write.csv(train_data, "Data/Cleveland.data.train.csv", row.names=FALSE)
+```
+
+
