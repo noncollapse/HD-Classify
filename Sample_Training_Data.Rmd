@@ -19,4 +19,4 @@ write.csv(test_data, "Data/Cleveland.data.test.csv", row.names=FALSE)
 write.csv(train_data, "Data/Cleveland.data.train.csv", row.names=FALSE)
 ```
 
-just a test if the clone run in my computer
+just a test if the clone works in my computer
