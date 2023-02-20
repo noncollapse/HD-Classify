@@ -25,4 +25,7 @@ A randomly sampled 20% of the full Cleveland data is set aside for testing. The 
 (65 lines)<br>
 [Cleveland.data.test.csv](https://github.com/gperez21/HD-Classify/files/10784854/Cleveland.data.test.csv)
 
+The R Code used to split the data can be found here:
+
+[R code for sample training and testing data](Sample_Training_Data.Rmd)
 
