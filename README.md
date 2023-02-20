@@ -8,3 +8,16 @@ The instances used are found in the `processed.cleveland.data` file.
 
 The names for the variables are found in the `heart-disease.names` files (line 109 onwards)
 
+#### **Creating Test and Training Data:**
+
+A randomly sampled 20% of the full Cleveland data is set aside for testing. The remaining 80% is for use in training the models.
+
+**Training Data**
+(238 lines)<br>
+[Cleveland.data.train.csv](https://github.com/gperez21/HD-Classify/files/10784855/Cleveland.data.train.csv)
+
+**Testing Data**
+(65 lines)<br>
+[Cleveland.data.test.csv](https://github.com/gperez21/HD-Classify/files/10784854/Cleveland.data.test.csv)
+
+
