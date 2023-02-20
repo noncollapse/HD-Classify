@@ -15,8 +15,8 @@ data <- read.csv("Data/detailed.cleveland.data.csv")
 test_train_split <- sample(c(FALSE,TRUE), nrow(data), replace=TRUE, prob = c(0.2, 0.8))
 test_data <- data[!test_train_split,]
 train_data <- data[test_train_split,]
-write.csv(test_data, "Cleveland.data.test.csv", row.names=FALSE)
-write.csv(train_data, "Cleveland.data.train.csv", row.names=FALSE)
+write.csv(test_data, "Data/Cleveland.data.test.csv", row.names=FALSE)
+write.csv(train_data, "Data/Cleveland.data.train.csv", row.names=FALSE)
 ```
 
 
