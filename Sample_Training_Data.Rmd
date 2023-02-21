@@ -19,4 +19,26 @@ write.csv(test_data, "Data/Cleveland.data.test.csv", row.names=FALSE)
 write.csv(train_data, "Data/Cleveland.data.train.csv", row.names=FALSE)
 ```
 
-test if the clone  works in my computer
+Trestbps Chol Thalach Oldpeak are numerical value and others are labels. Only col 12 and 13 have missing
+values (maybe omit them)
+```{r}
+summary(data)
+head(data)
+data[data == "?"] = NA
+which (is.na(data),arr.ind=TRUE,)
+
+```
+ 
+need normalization processing. 
+For Bayes
+According to the characteristics of the data set itself, the skewness of the distribution of the five variables of age, thalach, trtbps, chol, and oldpeak is relatively large.
+If normalization processing is not performed, it will It has a certain impact on the model fitting effect.
+
+For KNN
+The value range of each variable in this data set is quite different, for example, the value of age is from 29 to 77, and the value of chol is from 126 to 564. 
+The dimensions of the two are obviously different, which requires Normalization processing makes the data more in line with the requirements of model fitting(knn).
+
+For logi regresstion
+Introduce dummy variables. if no dummy variables are introduced, the data will be It is believed that there is a size relationship between the three, 
+which is not conducive to model fitting(Logi regresstion.
+(We can draw some graph to have a celar view those problem)
