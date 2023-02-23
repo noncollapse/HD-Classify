@@ -1,0 +1,145 @@
+---
+title: "visualization"
+author: "Kai Ye"
+date: "2/21/2023"
+output: 
+  pdf_document:
+    latex_engine: xelatex
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## The pre_work before the visualization.
+train_data_nomissing is the raw data without missing(all number)
+train_data_redo is the data change the lable data to its label
+
+
+```{r}
+library(ggplot2)
+library(readr)
+
+data <- read.csv("data/detailed.cleveland.data.csv")
+test_train_split <- sample(c(FALSE,TRUE), nrow(data), replace=TRUE, prob = c(0.2, 0.8))
+
+
+
+test_data <- data[!test_train_split,]
+train_data <- data[test_train_split,]
+
+summary(train_data)
+train_data$CA = as.numeric(train_data$CA)
+train_data$Thal = as.numeric(train_data$Thal)# Notice when we read the CA from the csv, the CA will be read as character but it should be as numerical. See the summary
+summary(train_data)
+head(train_data)
+train_data[train_data == "?"] = NA
+which (is.na(train_data),arr.ind=TRUE)
+train_data_nomissing = na.exclude(train_data) 
+train_data_redo = train_data_nomissing
+
+train_data_redo$Outcome[which(train_data_redo$Outcome == 1)] = "Have heart disease of type 1"
+train_data_redo$Outcome[which(train_data_redo$Outcome == 2)] = "Have heart disease of type 2"
+train_data_redo$Outcome[which(train_data_redo$Outcome == 3)] = "Have heart disease of type 3"
+train_data_redo$Outcome[which(train_data_redo$Outcome == 4)] = "Have heart disease of type 4"
+train_data_redo$Outcome[which(train_data_redo$Outcome==0)] = "Do not have heart disease"
+
+train_data_redo$Sex[which(train_data_redo$Sex==0)] = "Female"
+train_data_redo$Sex[which(train_data_redo$Sex==1)] = "Male"
+
+train_data_redo$CP[which(train_data_redo$CP==1)] = "Typical angina"
+train_data_redo$CP[which(train_data_redo$CP==2)] = "Atypical angina"
+train_data_redo$CP[which(train_data_redo$CP==3)] = "Non-anginal pain"
+train_data_redo$CP[which(train_data_redo$CP==4)] = "Asymptomatic"
+
+train_data_redo$FBS[which(train_data_redo$FBS==0)] = "Fasting blood sugar <= 120 mg/dl"
+train_data_redo$FBS[which(train_data_redo$FBS==1)] = "Fasting blood sugar > 120 mg/dl"
+
+train_data_redo$RestECG[which(train_data_redo$RestEC==0)] ="Normal"
+train_data_redo$RestECG[which(train_data_redo$RestEC==1)] ="Having ST-T wave abnormality"
+train_data_redo$RestECG[which(train_data_redo$RestECG==2)] ="Showing probable or definite left ventricular hypertrophy"
+
+train_data_redo$Exang[which(train_data_redo$Exang==0)] = "No"
+train_data_redo$Exang[which(train_data_redo$Exang==1)] = "Yes"
+
+train_data_redo$Slope[which(train_data_redo$Slope==1)] ="Upsloping"
+train_data_redo$Slope[which(train_data_redo$Slope==2)] ="Flat"
+train_data_redo$Slope[which(train_data_redo$Slope==3)] ="Downsloping"
+  
+  
+
+
+
+train_data_redo$Thal[which(train_data_redo$Thal==3)] ="Normal"
+train_data_redo$Thal[which(train_data_redo$Thal==6)] ="Fixed defect"
+train_data_redo$Thal[which(train_data_redo$Thal==7)] ="Reversable defect"
+features_continuous=train_data_nomissing[,c("Age", "Trestbps", "Chol", "Thalach", "OldPeak","Outcome")]
+outcome_variable = train_data_redo$Outcome
+features_continuous=data.frame(features_continuous,outcome_variable)
+```
+##the visualization for the distrubution
+
+```{r cars}
+
+for (i in colnames(train_data_redo)) {
+  if (i!="Trestbps"&i!="Chol"&i!="Thalach"&i!="OldPeak"&i!="Age"&i!="Outcome") {
+    print(i)
+    print(ggplot(train_data_redo, aes(!!sym(i))) + geom_bar(aes(fill = Outcome), 
+                                                 ) +scale_fill_manual(values = c("#FFFF00", "#00BBFF","#9999FF","#0000FF","#5500FF"))+ ggtitle(paste("Histogram of",i)) + xlab(i))
+    
+  }
+  else if (i == "Chol"){
+          print(ggplot(train_data_redo, aes(!!sym(i))) + geom_histogram(aes(fill = Outcome), 
+bins = 100                                               ) +scale_fill_manual(values = c("#FFFF00", "#00BBFF","#9999FF","#0000FF","#5500FF"))+ ggtitle(paste("Histogram of",i)) + xlab(i))
+    } else if (i == "OldPeak"){
+          print(ggplot(train_data_redo, aes(!!sym(i))) + geom_histogram(aes(fill = Outcome),
+bins = 50                          ) + scale_fill_manual(values = c("#FFFF00", "#00BBFF","#9999FF","#0000FF","#5500FF"))+ggtitle(paste("Histogram of",i)) + xlab(i))
+    }
+    else {
+    if (i!="Outcome") {
+          print(ggplot(train_data_redo, aes(!!sym(i))) + geom_histogram(aes(fill = Outcome), 
+binwidth = 1                                                ) + scale_fill_manual(values = c("#FFFF00", "#00BBFF","#9999FF","#0000FF","#5500FF"))+ggtitle(paste("Histogram of",i)) + xlab(i))
+    }
+    
+  }
+    
+}
+
+
+
+
+```
+## the visualization about continuous variable.
+```{r}
+library(GGally)
+
+p = ggpairs(features_continuous,columns=c(1:6),mapping=ggplot2::aes(colour=outcome_variable))
+#maybe in r the index will be strange, but when save as png it will be ok
+
+
+ggsave("p.png",width = 20,height = 10)
+p
+
+```
+## the visualization about the corr between different features(notice i just use the number in the data set to get a overview, maybe we can do it more correct, if have time.)
+```{r}
+library(corrplot)
+library(ggplot2)
+library(ggcorrplot)
+library(vcd)
+library(psych)
+library(ggrepel)
+ 
+cor(train_data_nomissing)
+corr=cor(train_data_nomissing[,-14],method="spearman")
+corrp=ggcorrplot(corr, lab =T, lab_size = 4) 
+#maybe in r 4 will be big, but when save as png it will be ok
+ggsave("corrp.png",width = 20,height = 10)
+corrp
+
+```
+
+
+
+
+
